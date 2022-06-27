@@ -1,25 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import Header from './components/Header';
+import { SearchBar } from './components/Search';
+import Card from './components/Card';
+import { useEffect, useState } from 'react';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [cocktail, setCocktail] = useState([]);
+
+	const FetchCocktail = async () => {
+		const response = await fetch(
+			'https://www.thecocktaildb.com/api/json/v1/1/random.php'
+		);
+		const json = await response.json();
+
+		return json.drinks[0];
+	};
+
+	useEffect(() => {
+		FetchCocktail().then(setCocktail).catch(console.log);
+	}, [setCocktail]);
+
+	const changeCocktail = () => {
+		FetchCocktail().then(setCocktail).catch(console.log);
+	};
+
+	return (
+		<div className='App bg-gradient-to-r from-purple-400 to-pink-300 rounded-lg'>
+			<Header />
+			<SearchBar />
+			<Card
+				title={cocktail.strDrink}
+				link={cocktail.strDrinkThumb}
+				changeCocktail={changeCocktail}
+			/>
+		</div>
+	);
 }
 
 export default App;
+
+//https://www.thecocktaildb.com/api/json/v1/1/random.php
